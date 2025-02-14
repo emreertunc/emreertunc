@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emre Ertunç</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            /* Light mode variables */
+            --primary-color: #007AFF;
+            --text-color: #333;
+            --bg-color: #f5f5f7;
+            --section-bg: #ffffff;
+            --card-shadow: rgba(0, 0, 0, 0.05);
+            --hover-shadow: rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            /* Dark mode variables */
+            --primary-color: #0A84FF;
+            --text-color: #ffffff;
+            --bg-color: #000000;
+            --section-bg: #1C1C1E;
+            --card-shadow: rgba(255, 255, 255, 0.05);
+            --hover-shadow: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .profile-section {
+            margin-bottom: 40px;
+        }
+
+        .profile-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 75px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .apps-grid {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 40px 0;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .app-card {
+            flex: 1;
+            min-width: 200px;
+            max-width: 250px;
+            background: var(--section-bg);
+            border-radius: 20px;
+            padding: 30px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .app-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .app-icon {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 15px;
+            border-radius: 16px;
+        }
+
+        .cv-button {
+            display: inline-block;
+            background: linear-gradient(45deg, var(--primary-color), #5856D6);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 20px 0;
+            transition: transform 0.3s ease;
+        }
+
+        .cv-button:hover {
+            transform: scale(1.05);
+        }
+
+        .social-links {
+            margin-top: 30px;
+        }
+
+        .social-links a {
+            display: inline-block;
+            margin: 0 15px;
+            text-decoration: none;
+            color: #0077b5; /* LinkedIn mavisi */
+            font-size: 1.2em;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            transform: translateY(-3px);
+        }
+
+        .social-links a[href*="github"] {
+            color: #333;
+        }
+
+        .social-links a[href*="github"]:hover {
+            color: #000;
+        }
+
+        .social-links a[href*="linkedin"]:hover {
+            color: #005582;
+        }
+
+        .social-links a i {
+            margin-right: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .apps-grid {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .app-card {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+
+        /* Theme switcher styles */
+        .theme-switch-wrapper {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            z-index: 999;
+            padding: 10px;
+            background: var(--section-bg);
+            border-radius: 25px;
+            box-shadow: 0 2px 10px var(--card-shadow);
+        }
+
+        .theme-switch {
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .theme-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "🌞";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            transition: .4s;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+            content: "🌙";
+        }
+
+        /* Dark mode specific styles */
+        [data-theme="dark"] .app-card {
+            border: 1px solid #333;
+        }
+
+        [data-theme="dark"] .social-links a[href*="github"] {
+            color: #fff;
+        }
+
+        [data-theme="dark"] .social-links a[href*="github"]:hover {
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="theme-switch-wrapper">
+        <label class="theme-switch">
+            <input type="checkbox" id="theme-toggle">
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <div class="container">
+        <div class="profile-section">
+            <h1>Emre Ertunç</h1>
+            <p>Software Engineer & Newbie iOS Developer</p>
+        </div>
+
+        <div class="apps-grid">
+            <a href="slean.html" class="app-card">
+                <img src="source/slean-logo.png" alt="Slean" class="app-icon">
+                <h3>Slean</h3>
+                <p>Photo and Video Management App</p>
+            </a>
+            <a href="sneakshare.html" class="app-card">
+                <img src="source/sneakshare-logo.png" alt="SneakShare" class="app-icon">
+                <h3>SneakShare</h3>
+                <p>URL Cleaner & Link Anonymizer</p>
+            </a>
+        </div>
+
+        <a href="cv.pdf" class="cv-button" target="_blank">
+            View My CV
+        </a>
+
+        <div class="social-links">
+            <a href="https://www.linkedin.com/in/emrertunc/" target="_blank" rel="noopener noreferrer">
+                <i class="fab fa-linkedin"></i>
+                <span>LinkedIn</span>
+            </a>
+            <a href="https://github.com/emreertunc" target="_blank" rel="noopener noreferrer">
+                <i class="fab fa-github"></i>
+                <span>GitHub</span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        const themeToggle = document.getElementById('theme-toggle');
+        
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            themeToggle.checked = true;
+        }
+
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches && !localStorage.getItem('theme')) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            themeToggle.checked = true;
+        }
+
+        themeToggle.addEventListener('change', function() {
+            if (this.checked) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+    </script>
+</body>
+</html>
