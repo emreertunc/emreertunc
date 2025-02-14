@@ -24,7 +24,6 @@
                 const bodyContent = html.match(/<body>([\s\S]*)<\/body>/)[1];
                 document.getElementById('content').innerHTML = bodyContent;
                 
-                // Script'leri yeniden yükle
                 const scripts = document.getElementById('content').getElementsByTagName('script');
                 for (let script of scripts) {
                     const newScript = document.createElement('script');
