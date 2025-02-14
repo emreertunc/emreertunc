@@ -18,7 +18,7 @@
                 html = html.replace(/src="source\//g, 'src="https://raw.githubusercontent.com/emreertunc/emreertunc/main/source/');
                 
                 // PDF URL'sini düzelt (eğer varsa)
-                html = html.replace(/href="cv.pdf"/g, 'href="https://raw.githubusercontent.com/emreertunc/emreertunc/main/cv.pdf"');
+                html = html.replace(/href="cv.pdf"/g, 'href="https://raw.githubusercontent.com/emreertunc/emreertunc/main/source/cv.pdf"');
                 
                 // Head içeriğini ayıkla ve uygula
                 const headContent = html.match(/<head>([\s\S]*)<\/head>/)[1];
