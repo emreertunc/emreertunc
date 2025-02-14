@@ -16,7 +16,7 @@
                 
                 html = html.replace(/src="source\//g, 'src="https://raw.githubusercontent.com/emreertunc/emreertunc/main/source/');
                 
-                html = html.replace(/href="cv.pdf"/g, 'href="https://raw.githubusercontent.com/emreertunc/emreertunc/main/source/cv.pdf" target="_blank"');
+                html = html.replace(/href="cv.pdf"/g, 'href="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/emreertunc/emreertunc/main/source/cv.pdf&embedded=true"');
                 
                 const headContent = html.match(/<head>([\s\S]*)<\/head>/)[1];
                 document.head.innerHTML += headContent;
