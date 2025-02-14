@@ -14,17 +14,13 @@
                 const response = await fetch('https://raw.githubusercontent.com/emreertunc/emreertunc/main/index.html');
                 let html = await response.text();
                 
-                // Görsel URL'lerini düzelt
                 html = html.replace(/src="source\//g, 'src="https://raw.githubusercontent.com/emreertunc/emreertunc/main/source/');
                 
-                // PDF URL'sini düzelt (eğer varsa)
-                html = html.replace(/href="cv.pdf"/g, 'href="https://raw.githubusercontent.com/emreertunc/emreertunc/main/source/cv.pdf"');
+                html = html.replace(/href="cv.pdf"/g, 'href="https://raw.githubusercontent.com/emreertunc/emreertunc/main/source/cv.pdf" target="_blank"');
                 
-                // Head içeriğini ayıkla ve uygula
                 const headContent = html.match(/<head>([\s\S]*)<\/head>/)[1];
                 document.head.innerHTML += headContent;
                 
-                // Body içeriğini ayıkla ve uygula
                 const bodyContent = html.match(/<body>([\s\S]*)<\/body>/)[1];
                 document.getElementById('content').innerHTML = bodyContent;
                 
