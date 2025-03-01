@@ -88,6 +88,8 @@
             padding: 30px;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            text-decoration: none;
+            color: var(--text-color);
         }
 
         .app-card:hover {
@@ -242,6 +244,22 @@
 
         [data-theme="dark"] .social-links a[href*="github"]:hover {
             color: #ccc;
+        }
+        
+        /* Karanlık modda app-card içindeki metin renklerini düzeltme */
+        [data-theme="dark"] .app-card h3,
+        [data-theme="dark"] .app-card p {
+            color: #ffffff;
+        }
+        
+        /* Karanlık modda link renklerini düzeltme */
+        [data-theme="dark"] .app-card {
+            color: #ffffff;
+            text-decoration: none;
+        }
+        
+        [data-theme="dark"] .app-card:hover {
+            color: #ffffff;
         }
     </style>
 </head>
