@@ -1,46 +1,524 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Emre Ertunç</title>
-</head>
-<body>
-    <div id="content"></div>
+    <title>Emre Ertunç - iOS Developer</title>
+    <meta name="description" content="Emre Ertunç - Indie iOS Developer. Creator of Slean, SneakShare, and Dilekçe Bot.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-    <script>
-        async function loadContent() {
-            try {
-                const response = await fetch('https://raw.githubusercontent.com/emreertunc/emreertunc/main/index.html');
-                let html = await response.text();
-                
-                html = html.replace(/src="source\//g, 'src="https://raw.githubusercontent.com/emreertunc/emreertunc/main/source/');
-                
-                html = html.replace(/href="cv.pdf"/g, 'href="https://docs.google.com/viewer?url=https://raw.githubusercontent.com/emreertunc/emreertunc/main/source/cv.pdf&embedded=true"');
-                
-                const headContent = html.match(/<head>([\s\S]*)<\/head>/)[1];
-                document.head.innerHTML += headContent;
-                
-                const bodyContent = html.match(/<body>([\s\S]*)<\/body>/)[1];
-                document.getElementById('content').innerHTML = bodyContent;
-                
-                const scripts = document.getElementById('content').getElementsByTagName('script');
-                for (let script of scripts) {
-                    const newScript = document.createElement('script');
-                    if (script.src) {
-                        newScript.src = script.src;
-                    } else {
-                        newScript.textContent = script.textContent;
-                    }
-                    document.body.appendChild(newScript);
-                    script.remove();
-                }
-            } catch (error) {
-                console.error('İçerik yüklenirken hata oluştu:', error);
+    <style>
+        :root {
+            --primary: #007AFF;
+            --accent: #5856D6;
+            --text: #ffffff;
+            --text-secondary: #98989d;
+            --bg: #050505;
+            --card-bg: #1C1C1E;
+            --card-border: #333;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            --card-hover-shadow: 0 8px 15px rgba(0, 0, 0, 0.5);
+            --divider: rgba(255, 255, 255, 0.06);
+        }
+
+        [data-theme="light"] {
+            --text: #1d1d1f;
+            --text-secondary: #6e6e73;
+            --bg: #f0ebe3;
+            --card-bg: rgba(255, 255, 255, 0.6);
+            --card-border: rgba(0, 0, 0, 0.06);
+            --card-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+            --card-hover-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
+            --divider: rgba(0, 0, 0, 0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: var(--text);
+            background: var(--bg);
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- Dot Grid Overlay --- */
+        .dot-grid {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+            background-size: 32px 32px;
+            pointer-events: none;
+        }
+
+        [data-theme="light"] .dot-grid {
+            background-image: radial-gradient(rgba(0, 0, 0, 0.07) 1px, transparent 1px);
+        }
+
+        /* --- Theme Toggle (Slider) --- */
+        .theme-switch-wrapper {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            z-index: 999;
+            padding: 10px;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 25px;
+            border: 1px solid var(--card-border);
+            box-shadow: var(--card-shadow);
+        }
+
+        .theme-switch {
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .theme-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "\1F31E";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            transition: .4s;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+            content: "\1F319";
+        }
+
+        /* --- Main Layout --- */
+        .page {
+            position: relative;
+            z-index: 1;
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 100px 24px 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* --- Profile Header --- */
+        .profile {
+            text-align: center;
+            margin-bottom: 64px;
+        }
+
+        .profile h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 12px;
+            color: var(--primary);
+        }
+
+        .profile-role {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            margin-bottom: 6px;
+        }
+
+        .profile-tagline {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            opacity: 0.7;
+        }
+
+        /* --- Section Label --- */
+        .section-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            color: var(--text-secondary);
+            margin-bottom: 28px;
+            text-align: center;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .section-label::before,
+        .section-label::after {
+            content: '';
+            height: 1px;
+            width: 40px;
+            background: linear-gradient(90deg, transparent, var(--divider));
+        }
+
+        .section-label::after {
+            background: linear-gradient(90deg, var(--divider), transparent);
+        }
+
+        /* --- App Cards Grid --- */
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            width: 100%;
+            margin-bottom: 64px;
+        }
+
+        .app-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            padding: 36px 24px 30px;
+            text-align: center;
+            text-decoration: none;
+            color: var(--text);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .app-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .app-icon {
+            width: 76px;
+            height: 76px;
+            border-radius: 18px;
+            margin-bottom: 18px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .app-card h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.01em;
+            color: var(--text);
+        }
+
+        .app-card p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .app-badge {
+            display: inline-block;
+            font-size: 0.6rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 4px 10px;
+            border-radius: 8px;
+            margin-top: 14px;
+            background: rgba(0, 122, 255, 0.1);
+            color: var(--primary);
+            border: 1px solid rgba(0, 122, 255, 0.1);
+        }
+
+        /* --- Actions Row --- */
+        .actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 48px;
+            align-items: center;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(0, 122, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 8px 32px rgba(0, 122, 255, 0.45);
+        }
+
+        .btn-secondary {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            color: #ffffff;
+            box-shadow: var(--card-shadow);
+        }
+
+        [data-theme="light"] .btn-secondary {
+            color: var(--text);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 20px rgba(0, 122, 255, 0.15);
+        }
+
+        /* --- Social Links --- */
+        .social-links {
+            margin-top: 30px;
+            margin-bottom: 48px;
+        }
+
+        .social-links a {
+            display: inline-block;
+            margin: 0 15px;
+            text-decoration: none;
+            color: #0077b5;
+            font-size: 1.2em;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            transform: translateY(-3px);
+        }
+
+        .social-links a[href*="linkedin"]:hover {
+            color: #005582;
+        }
+
+        .social-links a[href*="github"] {
+            color: #fff;
+        }
+
+        .social-links a[href*="github"]:hover {
+            color: #ccc;
+        }
+
+        .social-links a i {
+            margin-right: 8px;
+        }
+
+        /* Light mode overrides */
+        [data-theme="light"] .social-links a[href*="github"] {
+            color: #333;
+        }
+
+        [data-theme="light"] .social-links a[href*="github"]:hover {
+            color: #000;
+        }
+
+        /* --- Footer --- */
+        .footer {
+            margin-top: auto;
+            padding-top: 32px;
+            border-top: 1px solid var(--divider);
+            text-align: center;
+            width: 100%;
+        }
+
+        .footer p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            opacity: 0.6;
+        }
+
+        .footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 768px) {
+            .page {
+                padding: 80px 20px 40px;
+            }
+
+            .profile h1 {
+                font-size: 2.2rem;
+            }
+
+            .apps-grid {
+                grid-template-columns: 1fr;
+                max-width: 340px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .app-card {
+                padding: 28px 20px 24px;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: 280px;
+                justify-content: center;
             }
         }
 
-        loadContent();
+        /* --- Entrance Animations --- */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .profile { animation: fadeIn 0.8s ease forwards; }
+        .section-label { animation: fadeIn 0.6s 0.2s ease forwards; opacity: 0; }
+
+        .app-card {
+            opacity: 0;
+            animation: fadeIn 0.7s ease forwards;
+        }
+        .app-card:nth-child(1) { animation-delay: 0.25s; }
+        .app-card:nth-child(2) { animation-delay: 0.38s; }
+        .app-card:nth-child(3) { animation-delay: 0.51s; }
+
+        .actions { animation: fadeIn 0.6s 0.6s ease forwards; opacity: 0; }
+        .social-links { animation: fadeIn 0.6s 0.7s ease forwards; opacity: 0; }
+        .footer  { animation: fadeIn 0.5s 0.8s ease forwards; opacity: 0; }
+    </style>
+</head>
+<body>
+
+    <div class="dot-grid"></div>
+
+    <div class="theme-switch-wrapper">
+        <label class="theme-switch">
+            <input type="checkbox" id="theme-toggle">
+            <span class="slider"></span>
+        </label>
+    </div>
+
+    <main class="page">
+        <section class="profile">
+            <h1>Emre Ertunç</h1>
+            <p class="profile-role">Software Engineer</p>
+            <p class="profile-tagline">Newbie & Indie iOS Developer</p>
+        </section>
+
+        <p class="section-label">Apps</p>
+
+        <div class="apps-grid">
+            <a href="/slean/default.html" class="app-card">
+                <img src="source/slean-logo.png" alt="Slean" class="app-icon">
+                <h3>Slean</h3>
+                <p>Gallery Management App</p>
+                <span class="app-badge">iOS</span>
+            </a>
+            <a href="https://apps.apple.com/us/app/dilek%C3%A7e-bot-kolay-dilek%C3%A7e-yaz/id6751407632" class="app-card" target="_blank" rel="noopener noreferrer">
+                <img src="source/dilekcebot-logo.png" alt="Dilekçe Bot" class="app-icon">
+                <h3>Dilekçe Bot</h3>
+                <p>AI Petition Generator</p>
+                <span class="app-badge">iOS &amp; Android</span>
+            </a>
+            <a href="/sneakshare/default.html" class="app-card">
+                <img src="source/sneakshare-logo.png" alt="SneakShare" class="app-icon">
+                <h3>SneakShare</h3>
+                <p>Link Anonymizer & URL Shortener</p>
+                <span class="app-badge">iOS</span>
+            </a>
+        </div>
+
+        <div class="actions">
+            <a href="cv.pdf" class="btn btn-primary" target="_blank">
+                <i class="fas fa-file-alt"></i>
+                View My CV
+            </a>
+            <a href="mailto:emre@ertunc.com" class="btn btn-secondary">
+                <i class="fas fa-envelope"></i>
+                Contact
+            </a>
+        </div>
+
+        <div class="social-links">
+            <a href="https://www.linkedin.com/in/emrertunc/" target="_blank" rel="noopener noreferrer">
+                <i class="fab fa-linkedin"></i>
+                <span>LinkedIn</span>
+            </a>
+            <a href="https://github.com/emreertunc" target="_blank" rel="noopener noreferrer">
+                <i class="fab fa-github"></i>
+                <span>GitHub</span>
+            </a>
+        </div>
+
+        <footer class="footer">
+            <p>&copy; <span id="year"></span> Emre Ertunç</p>
+        </footer>
+    </main>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        const themeToggle = document.getElementById('theme-toggle');
+
+        // Default: dark. Checked = dark mode on.
+        themeToggle.checked = true;
+
+        if (localStorage.getItem('theme') === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+            themeToggle.checked = false;
+        }
+
+        if (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: light)').matches) {
+            document.documentElement.setAttribute('data-theme', 'light');
+            themeToggle.checked = false;
+        }
+
+        themeToggle.addEventListener('change', function() {
+            if (this.checked) {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+            }
+        });
     </script>
 </body>
 </html>
